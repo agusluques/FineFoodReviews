@@ -18,7 +18,13 @@ class Cluster(object):
 	def update(self):
 		avg = sum([p[1] for p in self.points])
 		avg = array(avg, float)
-		avg = avg / len(self.points)
+		self.centroid = avg / len(self.points)
+
+
+	def knn(self, point):
+		dists = sorted([(self.metric(p[1], point), p[0]) for p in self.points])
+		dists = dists[:self.k]
+		return mean([d[0] for d in dists])
 		
 
 # kc: cantidad de clusters
