@@ -46,7 +46,7 @@ def limpiarTexto(texto):
 	negacionUnida = ''
 	ultimaPalabra = ''
 	for palabra in sinStopwords.split(): #Si la ultima palabra era not, la uno con la proxima palabra
-		if ultimaPalabra in ('not', 'wasnt', 'arent', 'isnt' ,'werent',"aren't", "isn't", "wasn't"):
+		if ultimaPalabra in ('not', 'wasnt', 'arent', 'isnt' ,'werent','dont', 'doesnt', 'aint'):
 			negacionUnida += palabra
 		else:
 			negacionUnida += " "+palabra
