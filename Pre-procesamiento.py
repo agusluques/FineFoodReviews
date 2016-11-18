@@ -21,10 +21,14 @@ except NameError:
 
 listaAdj = {}	#creo diccionario
 
+listaNegaciones = ['not', 'wasnt', 'arent', 'isnt' ,'werent',"aren't", "isn't", "wasn't"]
 ### en el diccionario pongo todos los adjetivos con un 1 como valor
 ### esto lo hago para poder buscar en O(1)
 for synset in list(wn.all_synsets('a')):
 	for lemma in synset.lemmas():
+		palabra = lemma.name()
+		for word in listaNegaciones:
+			listaAdj[word+lemma.name()] = 1
 		listaAdj[lemma.name()] = 1
 
 with open("sinStop.csv","rb") as src:
