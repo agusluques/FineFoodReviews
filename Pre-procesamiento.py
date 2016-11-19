@@ -41,6 +41,10 @@ with open("sinStop.csv","rb") as src:
 				#print '\n'		#si esta en la lista de adjetivos
 				listaPalabras.append((int(row[6]), word)) 	#la escribo tipo Puntaje, Palabra
 
+		for word in row[8].split(): #para cada palabra de la columna SUMMARY
+			if word in listaAdj:
+				listaPalabras.append((int(row[6]), word))
+
 	listaRDD = sc.parallelize(listaPalabras, 8)
 	listaRDD = listaRDD.map(lambda x: (x[1],(1, x[0])))		#(palabra, (1, puntaje))
 	#print listaRDD.take(10)
@@ -59,6 +63,7 @@ with open("testLimpio.csv", "rb") as src:
 	listaTest = []
 	for row in test:
 		listaTest.append((row[0], row[8].split())) #(id, [texto])
+		listaTest.append((row[0], row[7].split()))
 
 	listaTestRDD = sc.parallelize(listaTest, 8)
 	#print listaTestRDD.take(1)
@@ -76,7 +81,7 @@ with open("testLimpio.csv", "rb") as src:
 	listaTestRDD = listaTestRDD.map(lambda x: (int(x[0]), (x[1], 1) if x[1] is not None else (0, 0)))
 
 	listaTestRDD = listaTestRDD.reduceByKey(lambda x, y: (x[0] + y[0], x[1] + y[1])) #(id, (sumaPuntaje, sumaPalabras))
-	listaTestRDD = listaTestRDD.mapValues(lambda x: x[0] / float(x[1]) if x[1] else 3.0) #(id, promedio)
+	listaTestRDD = listaTestRDD.mapValues(lambda x: x[0] / float(x[1]) if x[1] else 4.0) #(id, promedio)
 	
 #############################################
 
