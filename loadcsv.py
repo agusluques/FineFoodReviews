@@ -1,13 +1,9 @@
 from numpy import *
 def load_csv(fname, otype):
-	if otype != None:
-		return genfromtxt(open(fname, "rb"), comments="\\",delimiter=',', dtype=otype)
+	if otype == "int" or otype == "float":
+		return genfromtxt(open(fname, "rb"), dtype=otype, delimiter=',')
 
-	to_read = open(fname, "rb")
-	data = [r.split(',') for r in to_read]
-	to_read.close()
-	return data
-
+	return None
 def save_csv(data, fname):
 	to_write = open(fname, "w")
 	for d in data:

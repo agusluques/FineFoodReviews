@@ -3,6 +3,7 @@ from os.path import *
 from random import *
 from loadcsv import *
 from clean_text import *
+import csv
 
 def gen_fhash(m):
 	p = m
@@ -31,18 +32,23 @@ def hashing_trick(dim, test_name, train_name):
 	if not isfile(train_file) or not isfile(test_file):
 		clean_text()
 
-	train = load_csv(train_file, None)
-	test = load_csv(test_file, None)
-	fhash = gen_fhash(dim)	
 	test_tht = []
 	train_tht = []
-	for t in train[1:]:
-		vtext = tovect(fhash, t[9], dim)
-		train_tht.append(([t[6]] + vtext))
+	fhash = gen_fhash(dim)	
+	with open(train_file, "rb") as csvfile:
+		datareader = csv.reader(csvfile, delimiter=',')
+		datareader.next()
+		for d in datareader:
+			vt = tovect(fhash, d[9], dim)
+			train_tht.append([d[6]] + vt)
 
-	save_csv(train_tht, train_name)
-	for t in test[1:]:
-		vtext = tovect(fhash, t[8], dim)
-		test_tht.append([t[0]] + vtext)
+		save_csv(train_tht, train_name)
 
-	save_csv(test_tht, test_name)
+	with open(test_file, "rb") as csvfile:
+		datareader = csv.reader(csvfile, delimiter=',')
+		datareader.next()
+		for d in datareader:
+			vt = tovect(fhash, d[8], dim)
+			test_tht.append([d[0]] + vt)
+
+		save_csv(test_tht, test_name)

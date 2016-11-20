@@ -60,7 +60,9 @@ class Cluster(object):
 		for d in dists[self.k:]:
 			heap.pushpop(d)
 			
-		return mean([d[1] for d in heap.heap])
+		r = mean([d[1] for d in heap.heap])
+		print r
+		return r
 
 def gen_data(dim):
 	test_name = "testin"+str(dim)+"dim.csv"
@@ -68,19 +70,32 @@ def gen_data(dim):
 	if not isfile(train_name) or not isfile(test_name):
 		hashing_trick(dim, test_name, train_name)
 
-	train = load_csv(train_name, "int")
-	train = [(t[0], t[1:]) for t in train]
-	test = load_csv(test_name, "int")
-	test = [(t[0], t[1:]) for t in test]
+	train = []
+	test = []
+	with open(train_name, "rb") as csvfile:
+		dataread = genfromtxt(csvfile, dtype="int", delimiter=",")
+		for d in dataread:
+			train.append((d[0], d[1:]))
+
+	with open(test_name, "rb") as csvfile:
+		dataread = genfromtxt(csvfile, dtype="int", delimiter=",")
+		for d in dataread:
+			test.append((d[0], d[1:]))
+
 	return train, test
 
 def gen_centroids(train, kc, dim, m):
 	centroids_name = "centroids"+str(kc)+str(dim)+".csv"
+	centroids = []
 	if isfile(centroids_name):
-		return load_csv(centroids_name, "int")
+		with open(centroids_name,"rb") as csvfile:
+			dataread = genfromtxt(csvfile, dtype="float", delimiter=",")
+			for d in dataread:
+				centroids.append(d)
 
-	f = randint(0, len(train))
-	centroids = [f]
+		return centroids
+
+	centroids.append(randint(0, len(train)))
 	for _ in range(1, kc):
 		min_dist = []
 		for i in range(len(train)):
@@ -111,10 +126,10 @@ def save_clusters(clusters, dim, kc):
 	save_csv(to_save, kmeans_trained)
 
 def load_clusters(clusters, kmeans_trained):
-	points = load_csv(kmeans_trained, "int")
-	for p in points:
-		clusters[p[0]].append((p[1], p[2:]))
-
+	with open(kmeans_trained, "rb") as csvfile:
+		dataread = genfromtxt(csvfile, dtype="int", delimiter=",")
+		for d in dataread:
+			clusters[d[0]].append((d[1], d[2:]))	
 
 # dim: dimension de los datos tras aplicar hashing trick
 # kc: cantidad de clusters
@@ -131,18 +146,10 @@ def kmeans(dim, kc, kn, m):
 
 	# Training
 	print "Entrenando el algortimo"
-	kmeans_trained = "kmeans_trained" + str(dim) + str(kc) + ".csv"
-	if isfile(kmeans_trained):
-		print "Cargando kmeans trained"
-		load_clusters(clusters, kmeans_trained)
-	else:
-		print "Cargando kmeans untrained"
-		for t in train:
-			_, cluster = min([(c.dist(t[1]), c) for c in clusters])
-			cluster.append(t)
-			cluster.update()
-		print "Salvando Kmeans trained"
-		save_clusters(clusters, dim, kc)
+	for t in train:
+		_, cluster = min([(c.dist(t[1]), c) for c in clusters])
+		cluster.append(t)
+		cluster.update()
 
 	# Testing
 	print "Obteniendo resultados"
