@@ -4,6 +4,30 @@ from sys import *
 from random import *
 from hashing_trick import *
 from loadcsv import *
+from heapq import *
+
+class Heap(object):
+    """docstring for Heap."""
+    def __init__(self):
+        super(Heap, self).__init__()
+        self.heap = []
+
+    def push(self, arg):
+        heappush(self.heap, (-arg[0], arg[1]))
+
+    def pop(self):
+        return heappop(self.heap)
+
+    def pushAll(self, elements):
+        self.heap = elements
+        heapify(self.heap)
+
+    def top(self):
+        return self.heap[0]
+
+    def pushpop(self, arg):
+    	heappushpop(self.heap, (-arg[0], arg[1]))
+    	
 
 class Cluster(object):
 	"""docstring for Cluster"""
@@ -28,8 +52,15 @@ class Cluster(object):
 		self.centroid = self.sum_points / float(len(self.points))
 
 	def knn(self, point):
-		dists = min([(self.metric(p[1], point), p[0]) for p in self.points])
-		return dists[1]
+		heap = Heap()
+		dists = [(self.metric(p[1], point), p[0]) for p in self.points]
+		for d in dists[:self.k]:
+			heap.push(d)
+
+		for d in dists[self.k:]:
+			heap.pushpop(d)
+			
+		return mean([d[1] for d in heap.heap])
 
 def gen_data(dim):
 	test_name = "testin"+str(dim)+"dim.csv"
