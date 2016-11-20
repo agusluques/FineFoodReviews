@@ -14,19 +14,18 @@ class Cluster(object):
 		self.k = k
 		self.metric = metric
 		self.points = []
+		self.sum_points = [0] * self.dim
 
 	def dist(self, point):
 		return self.metric(self.centroid, point)
 
 	def append(self, point):
 		self.points.append(point)
+		self.sum_points += point[1]
+
 
 	def update(self):
-		avg = array([0] * self.dim)
-		for p in self.points:
-			avg += p[1]
-
-		self.centroid = avg / float(len(self.points))
+		self.centroid = self.sum_points / float(len(self.points))
 
 	def knn(self, point):
 		dists = min([(self.metric(p[1], point), p[0]) for p in self.points])
