@@ -60,9 +60,7 @@ class Cluster(object):
 		for d in dists[self.k:]:
 			heap.pushpop(d)
 			
-		r = mean([d[1] for d in heap.heap])
-		print r
-		return r
+		return mean([d[1] for d in heap.heap])
 
 def gen_data(dim):
 	test_name = "testin"+str(dim)+"dim.csv"
