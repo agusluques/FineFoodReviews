@@ -1,0 +1,11 @@
+1) Correr LimpiarTexto.py
+2) Correr dividir_train.py para dividir al train en dos (trainGrande.csv y trainChico.csv. Tambien se genera un trainChicoSinPuntaje.csv para poder hacer predicciones como si fuera el set de test)
+3) Hacer predicciones con el train dividido (usar trainGrande para entrenar y trainChico para predecir)(guardar esas predicciones en formato para subir a kaggle)
+4) Hacer las predicciones reales
+5) Correr combiner.py (esto genera un nuevo archivo para kaggle)
+
+Si el kmeans toma como entrada el archivo que subio ayer Agus (el de puntaje,palabras) estaria bueno tener el script porque lo vamos a necesitar cada vez que corramos kmeans con sets distintos
+
+Capaz estaria bueno hacer un script que haga todas estas cosas (o por lo menos a partir del punto 3) para no tener que andar ejecutando varios scripts por separado (sobre todo porque si los nombres de los archivos generados no coinciden es un quilombo)
+
+Despues tambien podemos probar eso de dividir al train en 2 para darle una parte a cada clasificador (si hacemos eso, habría que hacerlo entre los puntos 1 y 2, y despues repetir todos los puntos siguientes para ambos clasificadores)
