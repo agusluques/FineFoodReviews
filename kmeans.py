@@ -91,6 +91,3 @@ def kmeans(dim, kc, kn, m):
 		result.append((int(t[0]), cluster.knn(t[1])))
 
 	return result
-
-metric = lambda a,b: linalg.norm(a-b)
-print kmeans(int(argv[1]), int(argv[2]), int(argv[3]), metric)
