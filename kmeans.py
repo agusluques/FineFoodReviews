@@ -131,6 +131,23 @@ def load_clusters(clusters, kmeans_trained):
 		for d in dataread:
 			clusters[d[0]].append((d[1], d[2:]))	
 
+def gen_centroids_rnd(train, kc, dim):
+	centroids_name = "centroidsrnd"+str(kc)+str(dim)+".csv"
+	centroids = []
+	if isfile(centroids_name):
+		with open(centroids_name,"rb") as csvfile:
+			dataread = genfromtxt(csvfile, dtype="float", delimiter=",")
+			for d in dataread:
+				centroids.append(d)
+
+		return centroids
+
+	for _ in range(kc):
+		r = randint(0, len(train))
+		centroids.append(train[r][1])
+	
+	save_csv(centroids, centroids_name)
+	return centroids
 # dim: dimension de los datos tras aplicar hashing trick
 # kc: cantidad de clusters
 # kn: cantidad de vecinos en knn
@@ -141,7 +158,8 @@ def kmeans(dim, kc, kn, m):
 	print "Produciendo datos"
 	train, test = gen_data(dim)
 	print "Produciendo centroides y clusters"
-	centroids = gen_centroids(train, kc, dim, m)
+	#centroids = gen_centroids(train, kc, dim, m)
+	centroids = gen_centroids_rnd(train, kc, dim)
 	clusters = [Cluster(c, m, kn) for c in centroids]
 
 	# Training
