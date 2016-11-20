@@ -34,13 +34,17 @@ with open("sinStop.csv","rb") as src:
 	file= csv.reader( src )
 	file.next()	# salteo la primer linea que tiene los nombres
 	listaPalabras = []
+	forKMeans = open("archivoParaKMeans.csv", "wb")
+
 	for row in file:
+		forKMeans.write(row[6]+',')
 		for word in row[9].split(): #para cada palabra de la columna TEXT
 			if word in listaAdj:
+				forKMeans.write(word+' ')
 				#print (int(row[6]), word)
 				#print '\n'		#si esta en la lista de adjetivos
 				listaPalabras.append((int(row[6]), word)) 	#la escribo tipo Puntaje, Palabra
-
+		forKMeans.write('\n')
 		for word in row[8].split(): #para cada palabra de la columna SUMMARY
 			if word in listaAdj:
 				listaPalabras.append((int(row[6]), word))
