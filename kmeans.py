@@ -43,8 +43,8 @@ def gen_data(dim):
 	test = [(t[0], t[1:]) for t in test]
 	return train, test
 
-def gen_centroids(train, kc, m):
-	centroids_name = str(kc) + "centroids.csv"
+def gen_centroids(train, kc, dim, m):
+	centroids_name = "centroids"+str(kc)+str(dim)+".csv"
 	if isfile(centroids_name):
 		return load_csv(centroids_name, "int")
 
@@ -65,7 +65,7 @@ def gen_centroids(train, kc, m):
 	return centroids
 
 def save_clusters(clusters, dim, kc):
-	centroids_name = str(len(clusters)) + "centroids.csv"
+	centroids_name = "centroids"+str(kc)+str(dim)+".csv"
 	centroids = [c.centroid for c in clusters]
 	save_csv(centroids, centroids_name)
 
@@ -95,7 +95,7 @@ def kmeans(dim, kc, kn, m):
 	print "Produciendo datos"
 	train, test = gen_data(dim)
 	print "Produciendo centroides y clusters"
-	centroids = gen_centroids(train, kc, m)
+	centroids = gen_centroids(train, kc, dim, m)
 	clusters = [Cluster(c, m, kn) for c in centroids]
 
 	# Training
