@@ -67,6 +67,27 @@ def gen_centroids(train, kc, m):
 	save_csv(centroids, centroids_name)
 	return centroids
 
+def save_clusters(clusters, dim, kc):
+	centroids_name = str(len(clusters)) + "centroids.csv"
+	centroids = [c.centroid for c in clusters]
+	save_csv(centroids, centroids_name)
+
+	to_save = []
+	for i in range(len(clusters)):
+		points = clusters[i].points
+		for p in points:
+			c = [i, p[0]] + list(p[1])
+			to_save.append(c)
+
+	kmeans_trined = "kmeans_trained" + str(dim) + str(kc) + ".csv"
+	save_csv(to_save, kmeans_trained)
+
+def load_clusters(clusters, kmeans_trained):
+	points = load_csv(kmeans_trained, "int")
+	for p in points:
+		clusters[p[0]].append((p[1], p[2:]))
+
+
 # dim: dimension de los datos tras aplicar hashing trick
 # kc: cantidad de clusters
 # kn: cantidad de vecinos en knn
@@ -79,10 +100,15 @@ def kmeans(dim, kc, kn, m):
 	clusters = [Cluster(c, m, kn) for c in centroids]
 
 	# Training
-	for t in train:
-		_, cluster = min([(c.dist(t[1]), c) for c in clusters])
-		cluster.append(t)
-		cluster.update()
+	kmeans_trined = "kmeans_trained" + str(dim) + str(kc) + ".csv"
+	if isfile(kmeans_trained):
+		load_clusters(clusters, kmeans_trained)
+	else:
+		for t in train:
+			_, cluster = min([(c.dist(t[1]), c) for c in clusters])
+			cluster.append(t)
+			cluster.update()
+		save_clusters(clusters, dim, kc)
 
 	# Testing
 	result = []
