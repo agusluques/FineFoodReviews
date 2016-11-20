@@ -29,10 +29,8 @@ class Cluster(object):
 		self.centroid = avg / float(len(self.points))
 
 	def knn(self, point):
-		dists = [(self.metric(p[1], point), p[0]) for p in self.points]
-		dists = sorted(dists, key = lambda d: d[0])
-		dists = dists[:self.k]
-		return mean([d[1] for d in dists])
+		dists = min([(self.metric(p[1], point), p[0]) for p in self.points])
+		return dists[1]
 
 def gen_data(dim):
 	test_name = "testin"+str(dim)+"dim.csv"
@@ -79,7 +77,7 @@ def save_clusters(clusters, dim, kc):
 			c = [i, p[0]] + list(p[1])
 			to_save.append(c)
 
-	kmeans_trined = "kmeans_trained" + str(dim) + str(kc) + ".csv"
+	kmeans_trained = "kmeans_trained" + str(dim) + str(kc) + ".csv"
 	save_csv(to_save, kmeans_trained)
 
 def load_clusters(clusters, kmeans_trained):
@@ -95,22 +93,29 @@ def load_clusters(clusters, kmeans_trained):
 def kmeans(dim, kc, kn, m):
 	# train es una lista de tuplas del tipo (label,point)
 	# test es una lista de tuplas del tipo (id,point)
+	print "Produciendo datos"
 	train, test = gen_data(dim)
+	print "Produciendo centroides y clusters"
 	centroids = gen_centroids(train, kc, m)
 	clusters = [Cluster(c, m, kn) for c in centroids]
 
 	# Training
-	kmeans_trined = "kmeans_trained" + str(dim) + str(kc) + ".csv"
+	print "Entrenando el algortimo"
+	kmeans_trained = "kmeans_trained" + str(dim) + str(kc) + ".csv"
 	if isfile(kmeans_trained):
+		print "Cargando kmeans trained"
 		load_clusters(clusters, kmeans_trained)
 	else:
+		print "Cargando kmeans untrained"
 		for t in train:
 			_, cluster = min([(c.dist(t[1]), c) for c in clusters])
 			cluster.append(t)
 			cluster.update()
+		print "Salvando Kmeans trained"
 		save_clusters(clusters, dim, kc)
 
 	# Testing
+	print "Obteniendo resultados"
 	result = []
 	for t in test:
 		_, cluster = min([(c.dist(t[1]), c) for c in clusters])
