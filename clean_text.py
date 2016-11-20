@@ -100,10 +100,6 @@ def limpiarTest(entrada, salida):
 	entrada.close()
 	salida.close()
 
-def clean_data():
+def clean_text():
 	limpiarTrain('train.csv', 'train_clean.csv')
 	limpiarTest('test.csv', 'test_clean.csv')
-
-clean_data()
-
-

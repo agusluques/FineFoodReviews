@@ -2,6 +2,7 @@ from sys import *
 from os.path import *
 from random import *
 from loadcsv import *
+from clean_text import *
 
 def find_next_prime(n):
     return find_prime_in_range(n, 2*n)
@@ -37,8 +38,12 @@ def tovect(fhash, text, dim):
 
 
 def hashing_trick(dim, test_name, train_name):
-	train = load_csv("train_clean.csv", "str")
-	test = load_csv("test_clean.csv", "str")
+	train_file = "train_clean.csv"
+	test_file = "test_clean.csv"
+	if not isfile(train_file) or not isfile(test_file):
+		clean_text()
+	train = load_csv(train_file, "str")
+	test = load_csv(test_file, "str")
 	fhash = gen_fhash(dim)	
 	test_tht = []
 	train_tht = []
