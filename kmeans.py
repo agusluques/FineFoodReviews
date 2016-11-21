@@ -108,11 +108,7 @@ def gen_centroids(train, kc, dim, m):
 	save_csv(centroids, centroids_name)
 	return centroids
 
-def save_clusters(clusters, dim, kc):
-	centroids_name = "centroids"+str(kc)+str(dim)+".csv"
-	centroids = [c.centroid for c in clusters]
-	save_csv(centroids, centroids_name)
-
+def save_clusters(clusters, clusters_file):
 	to_save = []
 	for i in range(len(clusters)):
 		points = clusters[i].points
@@ -120,14 +116,16 @@ def save_clusters(clusters, dim, kc):
 			c = [i, p[0]] + list(p[1])
 			to_save.append(c)
 
-	kmeans_trained = "kmeans_trained" + str(dim) + str(kc) + ".csv"
-	save_csv(to_save, kmeans_trained)
+	save_csv(to_save, clusters_file)
 
-def load_clusters(clusters, kmeans_trained):
-	with open(kmeans_trained, "rb") as csvfile:
+def load_clusters(clusters, clusters_file):
+	with open(clusters_file, "rb") as csvfile:
 		dataread = genfromtxt(csvfile, dtype="int", delimiter=",")
 		for d in dataread:
-			clusters[d[0]].append((d[1], d[2:]))	
+			clusters[d[0]].append((d[1], d[2:]))
+
+	for c in clusters:
+		c.update	
 
 def gen_centroids_rnd(train, kc, dim):
 	centroids_name = "centroidsrnd"+str(kc)+str(dim)+".csv"
@@ -161,16 +159,29 @@ def kmeans(dim, kc, kn, m):
 	clusters = [Cluster(c, m, kn) for c in centroids]
 
 	# Training
-	print "Entrenando el algortimo"
-	for t in train:
-		_, cluster = min([(c.dist(t[1]), c) for c in clusters])
-		cluster.append(t)
-		cluster.update()
+	clusters_file = "clusters"+str(kc)+str(dim)+".csv"
+	if isfile(clusters_file):
+		print "Cargando clusters"
+		load_clusters(clusters, clusters_file)
+	else:
+		print "Entrenando el algortimo"
+		i = 0
+		for t in train:
+			i += 1
+			print i
+			_, cluster = min([(c.dist(t[1]), c) for c in clusters])
+			cluster.append(t)
+			cluster.update()
+
+		save_clusters(clusters, clusters_file)
 
 	# Testing
 	print "Obteniendo resultados"
 	result = []
+	i = 0
 	for t in test:
+		print i 
+		i += 1
 		_, cluster = min([(c.dist(t[1]), c) for c in clusters])
 		result.append((int(t[0]), cluster.knn(t[1])))
 
