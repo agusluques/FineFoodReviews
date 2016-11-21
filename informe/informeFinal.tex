@@ -110,7 +110,12 @@ Los pasos del algoritmo son los siguientes:
     
 \end{enumerate}
 
-\chapter{K-means y Knn}
+\chapter{Hashing Trick, K-means y Knn}
+Partiendo de los datos presentes ya procesados, se decidio usar el meotodo de Hashing Trick para modelar los datos en un fromato vectorial y asi poder usarlos con Kmeans. Respecto de la dimensionalidad a la cual proyectar cada uno los textos, mediante pruebas se obtuvo aquella que sea tratable en memoria dado los recursos tecnologicos con los que se cuenta y que genere buenos resultados en el algoritmo que se utilizara luego.
+Mediante un analisis con Kmeans++ observamos que con pocas dimensiones, los datos tendian a acumularse en pocos cluster. Esto fue un gran problema dado que nuestra propuesta era la de usar Kmeans para mitigar el costo de ejecutar KNN. Si todos los datos confluian en pocos grupos, Kmeans no surtiria el efecto esperado. 
+Incrementando paulatinamente la cantidad de dimensiones llegamos a las que se encuentran presentes en las pruebas sobre kaggle (101 y 53 dimensiones, siendo 101 la cantidad de dimensiones mas usada)
+Respecto de la seleccion de centroides iniciales, se habia planteado en el diseño inicial hacer uso del metedo presente Kmeans++. Sin embargo debido al costo de calcular algunos pocos centroides y los resultados poco confiables se opto por producir centroides tomando, de forma aleatoria, vectores del set de train. Con esto se logro una mejor distribucion de los datos en los distintos clusters, reduciendo el tiempo de ejecucion de Kmeans.
+Por lo dicho anteriormente. decimos entonces que, para determinar el puntaje de una review, primero se la preprocesa con metodos ya mensionados en este informe. Luego se le aplica Hashing trick para obtener un vector representativo del texto presente en el registro. Mediante kmeans ya entrenado, se determina el cluster mas cercano dy se compara nuestro vector con todos los vectores que se encuentran en el cluster para llegar a los k vecinos mas cercanos. Finalmente, mediante un promedio de los puntajes de esos k vecinos mas cercanos, se llega al puntaje a asignar a la review inicial.
 
 
 \chapter{Combinación de clasificadores}
