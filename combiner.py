@@ -14,11 +14,11 @@ def combiner(predictBayes,predictKmeans,confiBayes,confiKmeans,archivoSalida):
 	bayesCsv = csv.reader(bayes)
 	kmeansCsv = csv.reader(kmeans)
 	for linea in bayesCsv:
-		prediccionesBayes.append(int(linea[1]))
+		prediccionesBayes.append(float(linea[1]))
 	i = 0
 	for linea in kmeansCsv:
 		salida.write(linea[0])
-		promedio = (int(linea[1]) * confiKmeans) + (prediccionesBayes[i] * confiBayes)
+		promedio = (float(linea[1]) * confiKmeans) + (prediccionesBayes[i] * confiBayes)
 		salida.write(",")
 		salida.write(str(promedio))
 		salida.write("\n")
@@ -39,11 +39,11 @@ def distancia_predicciones(archivoPredicciones,archivoOriginal):
 	originalCsv = csv.reader(original)
 	listaPredicciones = []
 	for linea in prediccionesCsv:
-		listaPredicciones.append(int(linea[1]))
+		listaPredicciones.append(float(linea[1]))
 	i = 0
 	diferenciaTotal = 0
 	for linea in originalCsv:
-		diferencia = abs(listaPredicciones[i] - int(linea[6]))
+		diferencia = abs(listaPredicciones[i] - float(linea[6]))
 		diferencia = diferencia**2
 		diferenciaTotal = diferenciaTotal + diferencia
 		i += 1
