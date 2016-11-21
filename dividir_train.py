@@ -43,5 +43,5 @@ def sacar_puntaje(archivoTrain, archivoSalida):
 	train.close()
 	salida.close()
 
-partir_train("trainLimpio.csv","trainGrande.csv","trainChico.csv",5)
+partir_train("train_clean.csv","trainGrande.csv","trainChico.csv",5)
 sacar_puntaje("trainChico.csv", "trainChicoSinPuntaje.csv")
