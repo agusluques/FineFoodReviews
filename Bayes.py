@@ -5,6 +5,7 @@
 
 ############# imports #################
 import csv
+from os.path import *
 import pyspark
 #######################################
 
@@ -29,6 +30,9 @@ for wordArchivoAdj in archivoAdj:
 	for negacion in listaNegaciones:
 		listaAdj[negacion+wordArchivoAdj.rstrip('\n')] = 1
 	listaAdj[wordArchivoAdj.rstrip('\n')] = 1 
+
+if not isfile("train_clean.csv") or not isfile("test_clean.csv"):
+	clean_text()
 
 with open("train_clean.csv","rb") as src:
 	file= csv.reader( src )
@@ -83,7 +87,7 @@ with open("test_clean.csv", "rb") as src:
 ######### guardo en archivo para subir a kaggle #############
 listaTest = listaTestRDD.sortByKey().collect()
 
-with open("predicciones.csv", "wb") as out:
+with open("prediccionesBayes.csv", "wb") as out:
 	csvOut = csv.writer(out)
 	csvOut.writerow(['Id','Prediction'])
 	for linea in listaTest:
