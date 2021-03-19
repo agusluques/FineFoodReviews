@@ -1,15 +1,18 @@
 import csv
 from sys import *
 
-def combiner(predictBayes,predictKmeans,confiBayes,confiKmeans,archivoSalida):
+def combiner(predictBayes,predictKmeans, archivoSalida):
 	"""Combina predicciones de dos clasificadores segun su numero de confiabilidad
 	Para hacer un promedio comun, indicar 0.5 en ambos numeros de confiabilidad
 	El formato de los archivos de entrada debe ser el de subida para kaggle"""
+	confiBayes = 0.520016
+	confiKmeans = 0.479984
+
 	bayes = open(predictBayes)
 	kmeans = open(predictKmeans)
 	encabezado = next(bayes)
 	next(kmeans)
-	salida = open(archivoSalida,"w")
+	salida = open("/Users/Agus/Facultad/2016-2do/Datos/tp/FineFoodReviews/kaggle/"+archivoSalida,"w")
 	salida.write(encabezado)
 	prediccionesBayes = {}
 	bayesCsv = csv.reader(bayes)
@@ -79,4 +82,8 @@ def distancia_predicciones(archivoPredicciones,archivoOriginal):
 	return float(aciertos) / float(total)
 
 
-combiner("prediccionesBayes.csv", "prediccionesKmeans.csv", float(argv[1]), float(argv[2]), "prediccionesCombinadas.csv")
+combiner("prediccionesBayes.csv", "prediccionesKmeans.csv", "prediccionesCombinadas.csv")
+
+
+
+

@@ -3,7 +3,7 @@ from loadcsv import *
 
 def test_kmeans(dim, kc, kn, m):
 	result = kmeans(dim, kc, kn, m)
-	title = "_".join(["kmeans", str(dim), str(kc), str(kn)])
+	title = "prediccionesKmeans.csv"
 	save_csv(result, title)
 
 metric = lambda a,b: linalg.norm(a-b)

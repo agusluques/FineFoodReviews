@@ -5,6 +5,7 @@ from random import *
 from hashing_trick import *
 from loadcsv import *
 from heapq import *
+from math import *
 
 class Heap(object):
     """docstring for Heap."""
@@ -183,6 +184,8 @@ def kmeans(dim, kc, kn, m):
 		print i 
 		i += 1
 		_, cluster = min([(c.dist(t[1]), c) for c in clusters])
-		result.append((int(t[0]), cluster.knn(t[1])))
+		patron = cluster.knn(t[1])
+		patron = patron if not isnan(patron) else 5.0
+		result.append((int(t[0]), patron))
 
 	return result
